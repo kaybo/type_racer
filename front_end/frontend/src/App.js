@@ -77,6 +77,7 @@ class App extends Component {
             textAlign: 'center',
         }} 
         onClick={this.startGame}>Start Game</button>
+        <button>test</button>
       </div>
     }else if(this.state.startButton === false){
       startButton = 
