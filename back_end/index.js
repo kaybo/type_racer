@@ -8,6 +8,10 @@ const port = 4001
 
 const app = express()
 app.use(cors())
+
+const generateWord = require('./helper');
+
+app.get('/randomword', (req, res) => res.send(generateWord(20)));
 // our server instance
 const server = http.createServer(app)
 

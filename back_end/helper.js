@@ -12,4 +12,5 @@ function generateWord(n){
     return string;
 
 }
-console.log(generateWord(20));
+
+module.exports = generateWord;
