@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import socketIOClient from "socket.io-client";
 import {stringValidation} from './helper/helper_method';
-
+import './App.css';
 const axios = require("axios");
 
 class App extends Component {
