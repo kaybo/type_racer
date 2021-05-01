@@ -1,18 +1,37 @@
-//Load HTTP module
-const http = require("http");
-const hostname = '127.0.0.1';
-const port = 8080;
+const express = require('express')
+const http = require('http')
+const socketIO = require('socket.io')
+var cors = require('cors')
 
-//Create HTTP server and listen on port 3000 for requests
-const server = http.createServer((req, res) => {
+// our localhost port
+const port = 4001
 
-  //Set the response HTTP header with HTTP status and Content type
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello World\n');
-});
+const app = express()
+app.use(cors())
+// our server instance
+const server = http.createServer(app)
 
-//listen for request on port 3000, and as a callback function have the port listened on logged
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
+// This creates our socket using the instance of the server
+const io = require('socket.io')(server, { origins: '*:*'});
+
+// This is what the socket.io syntax is like, we will work this later
+io.on('connection', socket => {
+  console.log('New client connected')
+  
+  // just like on the client side, we have a socket.on method that takes a callback function
+  socket.on('change color', (color) => {
+    // once we get a 'change color' event from one of our clients, we will send it to the rest of the clients
+    // we make use of the socket.emit method again with the argument given to use from the callback function above
+    console.log('Color Changed to: ', color)
+    io.sockets.emit('change color', color)
+  })
+  
+  // disconnect is fired when a client leaves the server
+  socket.on('disconnect', () => {
+    console.log('user disconnected')
+  })
+})
+
+
+
+server.listen(port, () => console.log(`Listening on port ${port}`))
