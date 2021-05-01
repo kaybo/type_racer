@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import socketIOClient from "socket.io-client";
+const axios = require("axios");
 
 class App extends Component {
 
@@ -9,7 +10,8 @@ class App extends Component {
       endpoint: "http://localhost:4001",
       
       ///
-      color: 'white'
+      color: 'white',
+      word: ""
       ///
       
     };
@@ -30,6 +32,13 @@ class App extends Component {
   
   ///
 
+  startGame = (e)=>{
+    axios.get("http://localhost:4001/randomword").then(res=>{
+      console.log(res);
+      this.setState({word: res});
+    });
+  };
+
   render() {
     // testing for socket connections
 
@@ -40,30 +49,10 @@ class App extends Component {
 
     return (
       <div>
-        test
+        <button onClick={this.startGame}>Start Game</button>
       </div>
     )
   }
 }
 export default App;
 
-// class App extends Component {
-
-//   constructor() {
-//     super();
-//     this.state = {
-//     };
-//   }
-
-//   this.activateLasers
-
-//   render() {
-//     return (
-//       <div>
-//         <button onClick={}>Start Game</button>
-//       </div>
-//     )
-//   }
-// }
-
-// export default App;
