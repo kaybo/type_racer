@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import socketIOClient from "socket.io-client";
 import {stringValidation} from './helper/helper_method';
-import './App.css';
+
 const axios = require("axios");
 
 class App extends Component {
@@ -70,7 +70,13 @@ class App extends Component {
 
       startButton =       
       <div>
-        <button onClick={this.startGame}>Start Game</button>
+        <button style={{
+            color: 'red',
+            padding: '40px',
+            fontFamily: 'Arial',
+            textAlign: 'center',
+        }} 
+        onClick={this.startGame}>Start Game</button>
       </div>
     }else if(this.state.startButton === false){
       startButton = 
@@ -86,7 +92,10 @@ class App extends Component {
     }
 
     return (
-      <div>
+      <div style={{
+        background: 'blue',
+        padding: '40px',
+      }}>
         {startButton}
       </div>
     )
