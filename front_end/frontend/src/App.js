@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import socketIOClient from "socket.io-client";
 
 class App extends Component {
+
   constructor() {
     super();
     this.state = {
@@ -38,19 +39,31 @@ class App extends Component {
     })
 
     return (
-      <div style={{ textAlign: "center" }}>
-        <button onClick={() => this.send() }>Change Color</button>
-
-
-        ///
-
-        // adding the two buttons, also, remove all of the comments in the JSX section.
-        <button id="blue" onClick={() => this.setColor('blue')}>Blue</button>
-        <button id="red" onClick={() => this.setColor('red')}>Red</button>
-        ///
-
+      <div>
+        test
       </div>
     )
   }
 }
 export default App;
+
+// class App extends Component {
+
+//   constructor() {
+//     super();
+//     this.state = {
+//     };
+//   }
+
+//   this.activateLasers
+
+//   render() {
+//     return (
+//       <div>
+//         <button onClick={}>Start Game</button>
+//       </div>
+//     )
+//   }
+// }
+
+// export default App;

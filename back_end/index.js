@@ -12,7 +12,19 @@ app.use(cors())
 const server = http.createServer(app)
 
 // This creates our socket using the instance of the server
-const io = require('socket.io')(server, { origins: '*:*'});
+const io = require('socket.io')(server, { cors: {
+    origins: ["*"],
+
+    handlePreflightRequest: (req, res) => {
+      res.writeHead(200, {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST",
+        "Access-Control-Allow-Headers": "my-custom-header",
+        "Access-Control-Allow-Credentials": true
+      });
+      res.end();
+    }}
+});
 
 // This is what the socket.io syntax is like, we will work this later
 io.on('connection', socket => {
