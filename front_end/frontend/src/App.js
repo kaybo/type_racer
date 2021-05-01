@@ -37,7 +37,7 @@ class App extends Component {
   startGame = (e)=>{
     axios.get("http://localhost:4001/randomword").then(res=>{
       console.log(res);
-      this.setState({word: res, startButton: false});
+      this.setState({word: res.data, startButton: false});
     });
     // console.log("hello")
     this.setState({startButton: false});
