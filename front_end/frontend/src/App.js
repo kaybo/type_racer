@@ -14,7 +14,8 @@ class App extends Component {
       color: 'white',
       word: "",
       startButton: true,
-      playerWord: ""
+      playerWord: "",
+      showTextField: "",
       
     };
   }
@@ -45,7 +46,13 @@ class App extends Component {
 
   updatePlayerText = (e) =>{
     console.log(this.state.playerWord)
-    this.setState({playerWord: e.target.value});
+    if(stringValidation(this.state.word, e.target.value)){
+      this.setState({playerWord: e.target.value}, ()=>{
+        if(this.state.word.length === this.state.playerWord.length){
+          this.setState({startButton: 'win'})
+        }
+      })
+    }
   };
 
   render() {
@@ -65,11 +72,16 @@ class App extends Component {
       <div>
         <button onClick={this.startGame}>Start Game</button>
       </div>
-    }else{
+    }else if(this.state.startButton === false){
       startButton = 
       <div>
         {this.state.word}
         <input type = "text" value = {this.state.playerWord} onChange = {this.updatePlayerText}/>
+      </div>
+    }else if(this.state.startButton === 'win'){
+      startButton = 
+      <div>
+        You have completed the race!
       </div>
     }
 
