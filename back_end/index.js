@@ -1,7 +1,7 @@
 //Load HTTP module
 const http = require("http");
 const hostname = '127.0.0.1';
-const port = 3000;
+const port = 8080;
 
 //Create HTTP server and listen on port 3000 for requests
 const server = http.createServer((req, res) => {
