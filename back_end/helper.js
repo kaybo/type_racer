@@ -12,5 +12,10 @@ function generateWord(n){
     return string;
 
 }
-
-module.exports = generateWord;
+function avgString(str1, str2){
+    var str1Length = str1.length;
+    var str2Length = str2.length;
+    var pct= (str1Length/ str2Length)*100;
+    return pct;
+}
+module.exports = {generateWord, avgString};
