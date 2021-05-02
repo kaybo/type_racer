@@ -70,7 +70,14 @@ class App extends Component {
 
       startButton =       
       <div>
-        <button onClick={this.startGame}>Start Game</button>
+        <button style={{
+            color: 'red',
+            padding: '40px',
+            fontFamily: 'Arial',
+            textAlign: 'center',
+        }} 
+        onClick={this.startGame}>Start Game</button>
+        <button>test</button>
       </div>
     }else if(this.state.startButton === false){
       startButton = 
@@ -86,7 +93,10 @@ class App extends Component {
     }
 
     return (
-      <div>
+      <div style={{
+        background: 'blue',
+        padding: '40px',
+      }}>
         {startButton}
       </div>
     )
