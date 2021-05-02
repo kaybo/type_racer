@@ -70,32 +70,52 @@ class App extends Component {
 
       startButton =       
       <div>
+        <h1 style={{
+          color: 'white',
+          fontSize: '100px',
+          position: 'relative',
+          top: '-300px',
+        }}> TYPE RACER </h1>
+        <h2 style={{
+          color: 'white',
+          positive: 'relative',
+          fontSize: '50px',
+        }}>Click the button to start typing against others!</h2>
         <button style={{
-            color: 'red',
-            padding: '40px',
+            backgroundColor: 'black',
+            color: 'white',
+            padding: '50px',
             fontFamily: 'Arial',
             textAlign: 'center',
+            fontSize: '50px',        
         }} 
         onClick={this.startGame}>Start Game</button>
-        <button>test</button>
       </div>
     }else if(this.state.startButton === false){
       startButton = 
-      <div>
+      <div style={{
+        color: 'white',
+        fontSize: '30px',
+      }
+
+      }>
         {this.state.word}
-        <input type = "text" value = {this.state.playerWord} onChange = {this.updatePlayerText}/>
+        <input type = "text" value = {this.state.playerWord} onChange = {this.updatePlayerText} />
       </div>
     }else if(this.state.startButton === 'win'){
       startButton = 
       <div>
-        You have completed the race!
+        <h1 style = {{
+          color: 'white',
+          fontSize: '50',
+        }}>You have completed the race!</h1>
       </div>
     }
 
     return (
       <div style={{
         background: 'blue',
-        padding: '40px',
+        padding: '400px',
       }}>
         {startButton}
       </div>
