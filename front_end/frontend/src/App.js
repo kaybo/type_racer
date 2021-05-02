@@ -82,7 +82,7 @@ class App extends Component {
           fontSize: '50px',
         }}>Click the button to start typing against others!</h2>
         <button style={{
-            backgroundColor: 'black',
+            backgroundColor: 'blue',
             color: 'white',
             padding: '50px',
             fontFamily: 'Arial',
