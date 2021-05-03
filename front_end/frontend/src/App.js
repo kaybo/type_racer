@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import socketIOClient from "socket.io-client";
-import {stringValidation} from './helper/helper_method';
+import {stringValidation, avgString} from './helper/helper_method';
 
 const axios = require("axios");
 
@@ -16,33 +16,53 @@ class App extends Component {
       startButton: true,
       playerWord: "",
       showTextField: "",
-      
+      id: Math.floor(Math.random() * 999999),
+      progressGameInterval: undefined,
     };
   }
 
-  // sending sockets
-  send = () => {
-    const socket = socketIOClient(this.state.endpoint);
-    socket.emit('change color', this.state.color) // change 'red' to this.state.color
-  }
+  startGameInterval;  
+  // progressGameInterval;
 
-  ///
-  
-  // adding the function
-  setColor = (color) => {
-    this.setState({ color })
-  }
-  
-  ///
 
-  startGame = (e)=>{
-    axios.get("http://localhost:4001/randomword").then(res=>{
-      console.log(res);
-      this.setState({word: res.data, startButton: false});
+  updateGameState = () =>{
+    console.log('updategamestate being called')
+    const playerState = {
+      id: this.state.id,
+      typedProgress: avgString(this.state.playerWord, this.state.word),
+
+    };
+    console.log(playerState.typedProgress);
+    axios.post("http://localhost:4001/updategame", playerState).then(res=>{
+      console.log(res.data);
     });
-    // console.log("hello")
-    this.setState({startButton: false});
   };
+
+  startGame = ()=>{
+    console.log('start game being called')
+    const playerInfo = {
+      id: this.state.id,
+    };
+
+    axios.post("http://localhost:4001/randomword", playerInfo).then(res=>{
+
+      if(res.data === "Please wait for another player to join."){
+        this.setState({word: res.data, startButton: "wait"});
+      }else if(res.data === "The game is in progress, please wait until the game is finished."){
+        this.setState({word: res.data, startButton: "full"});
+      }else{
+        this.setState({word: res.data, startButton: false}, ()=>{
+          clearInterval(this.startGameInterval);
+          this.state.progressGameInterval = setInterval(this.updateGameState, 1000);
+
+        });
+      }
+    });
+  };
+
+  realTimeQueue = () =>{
+    this.startGameInterval = setInterval(this.startGame, 2000);
+   }
 
   updatePlayerText = (e) =>{
     console.log(this.state.playerWord)
@@ -89,7 +109,7 @@ class App extends Component {
             textAlign: 'center',
             fontSize: '50px',        
         }} 
-        onClick={this.startGame}>Start Game</button>
+        onClick={this.realTimeQueue}>Start Game</button>
       </div>
     }else if(this.state.startButton === false){
       startButton = 
@@ -109,6 +129,11 @@ class App extends Component {
           color: 'white',
           fontSize: '50',
         }}>You have completed the race!</h1>
+      </div>
+    }else if(this.state.startButton === 'wait' || this.state.startButton === "full"){
+      startButton = 
+      <div>
+        {this.state.word}
       </div>
     }
 

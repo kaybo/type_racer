@@ -18,10 +18,9 @@ app.use(cors())
 let progress = new Map();
 let session = new Map();
 
-
 const {generateWord, avgString} = require('./helper');
 
-console.log(avgString("test", "test123"))
+// console.log(avgString("test", "test123"))
 
 let randomString = generateWord(20);
 
@@ -38,28 +37,32 @@ app.post('/randomword', (req, res) => {
     .then(function(release) {
       if(!progress.has(req.body.id)){
         if(progress.size >= PLAYER_CAPACITY){
+          console.log("progress size:", progress.size)
           res.send("The game is in progress, please wait until the game is finished.");
-          return;
         }else{
-          console.log('this does not exist: ', req.body);
+          
           progress.set(req.body.id, 0);
           session.set(req.body.id, 15);
+          console.log("progress size: ", progress.size)
+        }
+      }else{
+        if(progress.size < PLAYER_CAPACITY){
+          console.log("cap not filled")
+          res.send("Please wait for another player to join.");
+        }else{
+          res.send(randomString)
         }
       }
-      if(progress.size < PLAYER_CAPACITY){
-        res.send("Please wait for another player to join.");
-      }else{
-        res.send(randomString)
-      }
+
       release();
     });
-
-  
 });
 
 
 
-app.post('updategame', (req,res)=>{
+app.post('/updategame', (req,res)=>{
+  console.log('updating!')
+  res.send('hello!')
 });
 
 
