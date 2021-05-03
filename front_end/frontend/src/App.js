@@ -35,6 +35,43 @@ class App extends Component {
     console.log(playerState.typedProgress);
     axios.post("http://localhost:4001/updategame", playerState).then(res=>{
       console.log(res.data);
+      if(res.data === true){
+        clearInterval(this.state.progressGameInterval);
+        this.setState({
+          word: "",
+          startButton: true,
+          playerWord: "",
+          showTextField: "",
+          progressGameInterval: undefined,
+        });
+      }else{
+        for(const key in res.data){
+          console.log('DEBUGGGGGGGG:  ', key, this.state.id);
+          if(parseInt(this.state.id) !== parseInt(key)){
+           if(this.state.typedProgress !== 100 && res.data[key] === 100){
+              console.log('this is true')
+              clearInterval(this.state.progressGameInterval);
+              this.setState({
+                word: "",
+                startButton: "lose",
+                playerWord: "",
+                showTextField: "",
+              });
+            }
+          }
+          if(res.data[this.state.id] === 100){
+            console.log('this is true')
+              clearInterval(this.state.progressGameInterval);
+              this.setState({
+                word: "",
+                startButton: "win",
+                playerWord: "",
+                showTextField: "",
+              });
+          }
+        }
+        console.log(res.data)
+      }
     });
   };
 
@@ -61,7 +98,7 @@ class App extends Component {
   };
 
   realTimeQueue = () =>{
-    this.startGameInterval = setInterval(this.startGame, 2000);
+    this.startGameInterval = setInterval(this.startGame, 300);
    }
 
   updatePlayerText = (e) =>{
@@ -69,7 +106,10 @@ class App extends Component {
     if(stringValidation(this.state.word, e.target.value)){
       this.setState({playerWord: e.target.value}, ()=>{
         if(this.state.word.length === this.state.playerWord.length){
-          this.setState({startButton: 'win'})
+          // clearInterval(this.state.progressGameInterval);
+          this.setState({
+            startButton: "waitingresults",
+          })
         }
       })
     }
@@ -128,12 +168,28 @@ class App extends Component {
         <h1 style = {{
           color: 'white',
           fontSize: '50',
-        }}>You have completed the race!</h1>
+        }}>You have won the race!</h1>
       </div>
     }else if(this.state.startButton === 'wait' || this.state.startButton === "full"){
       startButton = 
       <div>
         {this.state.word}
+      </div>
+    }else if(this.state.startButton === 'lose'){
+      startButton = 
+      <div>
+        <h1 style = {{
+          color: 'white',
+          fontSize: '50',
+        }}>You have lost the race!</h1>
+      </div>
+    }else if(this.state.startButton === 'waitingresults'){
+      startButton = 
+      <div>
+        <h1 style = {{
+          color: 'white',
+          fontSize: '50',
+        }}>Please wait for result to come out</h1>
       </div>
     }
 

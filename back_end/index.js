@@ -22,7 +22,28 @@ const {generateWord, avgString} = require('./helper');
 
 // console.log(avgString("test", "test123"))
 
-let randomString = generateWord(20);
+let randomString = generateWord(5);
+
+const updateSession = () =>{
+  mutex.acquire().then((release)=>{
+    for(const [key, value] of session.entries()){
+      if(value <= 1){
+        session.clear();
+        progress.clear();
+        break;
+
+      }else{
+        session.set(key, value-1);
+      }
+    }
+
+    console.log('update session:')
+    console.log(session)
+    release();
+  });
+};
+
+let updateSessionInterval = setInterval(updateSession, 2000);
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -62,7 +83,24 @@ app.post('/randomword', (req, res) => {
 
 app.post('/updategame', (req,res)=>{
   console.log('updating!')
-  res.send('hello!')
+  console.log(req.body)
+  mutex.acquire().then(function(release){
+    if(session.has(req.body.id) && session.size == 2){
+      progress.set(req.body.id, req.body.typedProgress);
+      session.set(req.body.id, 5);
+      console.log(progress);
+      let obj = {}
+      for(const [key, value] of progress.entries()){
+        obj[key] = value;
+      }
+      res.send(obj)
+    }else{
+      res.send("true")
+    }
+    
+    release();
+  });
+
 });
 
 
