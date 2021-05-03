@@ -1,7 +1,13 @@
 const express = require('express')
 const http = require('http')
+var Mutex = require('async-mutex').Mutex;
 const socketIO = require('socket.io')
 var cors = require('cors')
+const bodyParser = require('body-parser');
+
+var PLAYER_CAPACITY = 2; //change this for the amount of players that can play at the same time
+
+const mutex = new Mutex();
 
 // our localhost port
 const port = 4001
@@ -9,9 +15,54 @@ const port = 4001
 const app = express()
 app.use(cors())
 
-const {generateWord} = require('./helper');
+let progress = new Map();
+let session = new Map();
 
-app.get('/randomword', (req, res) => res.send(generateWord(20)));
+
+const {generateWord, avgString} = require('./helper');
+
+console.log(avgString("test", "test123"))
+
+let randomString = generateWord(20);
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+app.use(bodyParser.json())
+
+app.post('/randomword', (req, res) => {
+  console.log(req.body)
+  mutex
+    .acquire()
+    .then(function(release) {
+      if(!progress.has(req.body.id)){
+        if(progress.size >= PLAYER_CAPACITY){
+          res.send("The game is in progress, please wait until the game is finished.");
+          return;
+        }else{
+          console.log('this does not exist: ', req.body);
+          progress.set(req.body.id, 0);
+          session.set(req.body.id, 15);
+        }
+      }
+      if(progress.size < PLAYER_CAPACITY){
+        res.send("Please wait for another player to join.");
+      }else{
+        res.send(randomString)
+      }
+      release();
+    });
+
+  
+});
+
+
+
+app.post('updategame', (req,res)=>{
+});
+
+
 // our server instance
 const server = http.createServer(app)
 
@@ -30,23 +81,7 @@ const io = require('socket.io')(server, { cors: {
     }}
 });
 
-// This is what the socket.io syntax is like, we will work this later
-io.on('connection', socket => {
-  console.log('New client connected')
-  
-  // just like on the client side, we have a socket.on method that takes a callback function
-  socket.on('change color', (color) => {
-    // once we get a 'change color' event from one of our clients, we will send it to the rest of the clients
-    // we make use of the socket.emit method again with the argument given to use from the callback function above
-    console.log('Color Changed to: ', color)
-    io.sockets.emit('change color', color)
-  })
-  
-  // disconnect is fired when a client leaves the server
-  socket.on('disconnect', () => {
-    console.log('user disconnected')
-  })
-})
+
 
 
 
