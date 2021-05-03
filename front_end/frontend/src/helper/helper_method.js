@@ -18,3 +18,12 @@ export function avgString(str1, str2){
     var pct= (str1Length/ str2Length)*100;
     return pct;
 }
+
+export function WPM(word, startTime, endTime){
+    var count = word.length;
+    var time = endTime - startTime;
+    var wpm = count / (time / 60);
+
+
+    return wpm;
+}
